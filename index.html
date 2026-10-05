@@ -2,2514 +2,425 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="theme-color" content="#080b18">
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#070a16">
 <title>QueryX | Secure Portal</title>
-
 <style>
-*{
-    box-sizing:border-box;
-    -webkit-tap-highlight-color:transparent;
-}
-
-html,body{
-    margin:0;
-    padding:0;
-    min-height:100%;
-}
-
-body{
-    font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-    color:#fff;
-    background:#070a16;
-    overflow-x:hidden;
-}
-
-/* Animated wallpaper */
-body:before,
-body:after{
-    content:"";
-    position:fixed;
-    width:300px;
-    height:300px;
-    border-radius:50%;
-    filter:blur(90px);
-    opacity:.30;
-    pointer-events:none;
-    z-index:-2;
-}
-
-body:before{
-    background:#4f46e5;
-    top:-100px;
-    left:-100px;
-    animation:float1 10s infinite alternate ease-in-out;
-}
-
-body:after{
-    background:#9333ea;
-    right:-120px;
-    bottom:-100px;
-    animation:float2 12s infinite alternate ease-in-out;
-}
-
-@keyframes float1{
-    from{transform:translate(0,0)}
-    to{transform:translate(130px,120px)}
-}
-
-@keyframes float2{
-    from{transform:translate(0,0)}
-    to{transform:translate(-130px,-100px)}
-}
-
-/* Header */
-header{
-    position:sticky;
-    top:0;
-    z-index:1000;
-    height:64px;
-    padding:10px 15px;
-
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
-    background:rgba(7,10,22,.78);
-    backdrop-filter:blur(20px);
-    -webkit-backdrop-filter:blur(20px);
-
-    border-bottom:1px solid rgba(255,255,255,.08);
-}
-
-.brand{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-.brandIcon{
-    width:40px;
-    height:40px;
-    border-radius:13px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    background:linear-gradient(135deg,#6366f1,#a855f7);
-    box-shadow:0 0 25px rgba(99,102,241,.35);
-    font-size:20px;
-}
-
-.brandName{
-    font-size:16px;
-    font-weight:800;
-}
-
-.brandSub{
-    color:#8b95aa;
-    font-size:9px;
-}
-
-.userBox{
-    max-width:145px;
-    text-align:right;
-    font-size:11px;
-    overflow:hidden;
-    white-space:nowrap;
-    text-overflow:ellipsis;
-}
-
-.logout{
-    color:#a5b4fc;
-    text-decoration:none;
-    font-size:10px;
-}
-
-/* Main */
-main{
-    width:100%;
-    max-width:650px;
-    margin:auto;
-    padding:18px 13px 50px;
-}
-
-/* Hero */
-.hero{
-    margin:5px 2px 17px;
-}
-
-.hero h1{
-    margin:0;
-    font-size:27px;
-    background:linear-gradient(90deg,#fff,#a5b4fc,#e9d5ff);
-    -webkit-background-clip:text;
-    background-clip:text;
-    color:transparent;
-}
-
-.hero p{
-    margin:6px 0 0;
-    color:#8b95aa;
-    font-size:12px;
-}
-
-/* Cards */
-.card{
-    position:relative;
-    padding:16px;
-    margin-bottom:13px;
-
-    border-radius:20px;
-
-    background:linear-gradient(
-        145deg,
-        rgba(255,255,255,.085),
-        rgba(255,255,255,.025)
-    );
-
-    border:1px solid rgba(255,255,255,.08);
-
-    box-shadow:
-        0 15px 45px rgba(0,0,0,.25),
-        inset 0 1px rgba(255,255,255,.04);
-
-    backdrop-filter:blur(18px);
-    -webkit-backdrop-filter:blur(18px);
-
-    animation:cardIn .35s ease;
-}
-
-@keyframes cardIn{
-    from{
-        opacity:0;
-        transform:translateY(8px);
-    }
-    to{
-        opacity:1;
-        transform:translateY(0);
-    }
-}
-
-/* Inputs */
-input,
-textarea{
-    width:100%;
-    border:1px solid rgba(255,255,255,.10);
-    outline:none;
-
-    background:rgba(0,0,0,.20);
-    color:#fff;
-
-    border-radius:12px;
-    padding:12px;
-
-    font-family:inherit;
-    font-size:14px;
-
-    margin-top:7px;
-
-    transition:.2s;
-}
-
-textarea{
-    resize:vertical;
-    min-height:90px;
-}
-
-input::placeholder,
-textarea::placeholder{
-    color:#667085;
-}
-
-input:focus,
-textarea:focus{
-    border-color:#6366f1;
-    box-shadow:0 0 0 3px rgba(99,102,241,.12);
-}
-
-/* Buttons */
-button{
-    width:100%;
-    border:0;
-    outline:none;
-
-    padding:12px 14px;
-    margin-top:9px;
-
-    border-radius:13px;
-
-    color:white;
-    font-weight:700;
-    font-size:14px;
-
-    cursor:pointer;
-
-    background:linear-gradient(135deg,#6366f1,#7c3aed);
-
-    box-shadow:0 8px 25px rgba(99,102,241,.20);
-
-    transition:.15s;
-}
-
-button:active{
-    transform:scale(.97);
-}
-
-button:hover{
-    filter:brightness(1.08);
-}
-
-.btnGreen{
-    background:linear-gradient(135deg,#16a34a,#059669);
-}
-
-.btnRed{
-    background:linear-gradient(135deg,#ef4444,#dc2626);
-}
-
-.btnGray{
-    background:rgba(255,255,255,.08);
-    box-shadow:none;
-}
-
-.btnOrange{
-    background:linear-gradient(135deg,#f59e0b,#ea580c);
-}
-
-/* Search */
-.searchBox{
-    position:relative;
-    margin-bottom:15px;
-}
-
-.searchIcon{
-    position:absolute;
-    left:14px;
-    top:50%;
-    transform:translateY(-50%);
-    opacity:.6;
-}
-
-.searchInput{
-    height:48px;
-    padding-left:42px;
-    margin:0;
-}
-
-/* Section */
-.sectionHeader{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:9px;
-}
-
-.sectionHeader b{
-    font-size:15px;
-}
-
-.muted{
-    color:#788398;
-    font-size:11px;
-}
-
-/* Owner */
-.ownerBanner{
-    display:flex;
-    align-items:center;
-    gap:12px;
-
-    padding:14px;
-    margin-bottom:14px;
-
-    border-radius:17px;
-
-    background:linear-gradient(
-        135deg,
-        rgba(99,102,241,.18),
-        rgba(168,85,247,.10)
-    );
-
-    border:1px solid rgba(129,140,248,.18);
-}
-
-.ownerIcon{
-    width:45px;
-    height:45px;
-    border-radius:14px;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    background:linear-gradient(135deg,#6366f1,#a855f7);
-    font-size:20px;
-}
-
-.ownerTitle{
-    font-weight:800;
-}
-
-.ownerSub{
-    color:#8993a7;
-    font-size:10px;
-}
-
-/* Query */
-.queryCard{
-    cursor:pointer;
-    transition:.2s;
-}
-
-.queryCard:hover{
-    transform:translateY(-2px);
-    border-color:rgba(129,140,248,.30);
-}
-
-.queryTop{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.status{
-    display:inline-block;
-    padding:5px 9px;
-    border-radius:99px;
-
-    background:rgba(99,102,241,.13);
-    color:#a5b4fc;
-
-    border:1px solid rgba(99,102,241,.13);
-
-    font-size:10px;
-}
-
-.queryText{
-    margin:10px 0 7px;
-    color:#e4e9f2;
-    font-size:14px;
-    line-height:1.5;
-    word-break:break-word;
-}
-
-.queryUser{
-    color:#68748a;
-    font-size:10px;
-}
-
-/* QR */
-.qrContainer{
-    text-align:center;
-}
-
-.qr{
-    display:block;
-    width:100%;
-    max-width:250px;
-    margin:13px auto;
-
-    padding:8px;
-    background:#fff;
-    border-radius:17px;
-
-    box-shadow:0 12px 40px rgba(0,0,0,.4);
-}
-
-.timer{
-    font-size:34px;
-    font-weight:900;
-    letter-spacing:2px;
-
-    color:#fb7185;
-
-    text-shadow:0 0 20px rgba(251,113,133,.30);
-
-    margin:3px 0;
-
-    animation:pulse 1s infinite;
-}
-
-@keyframes pulse{
-    50%{opacity:.55}
-}
-
-.timerText{
-    color:#7d879a;
-    font-size:11px;
-}
-
-/* Success */
-.success{
-    padding:15px;
-    border-radius:15px;
-
-    background:rgba(34,197,94,.09);
-    border:1px solid rgba(34,197,94,.17);
-
-    color:#86efac;
-
-    line-height:1.55;
-}
-
-/* Empty */
-.empty{
-    text-align:center;
-    padding:30px 10px;
-    color:#69758b;
-    font-size:13px;
-}
-
-/* Login */
-.loginCard{
-    margin-top:15vh;
-    text-align:center;
-}
-
-.loginIcon{
-    width:75px;
-    height:75px;
-    margin:auto;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    border-radius:23px;
-
-    background:linear-gradient(135deg,#6366f1,#a855f7);
-    box-shadow:0 0 50px rgba(99,102,241,.35);
-
-    font-size:34px;
-}
-
-.loginCard h2{
-    margin:14px 0 5px;
-}
-
-.loginCard p{
-    color:#8b95aa;
-    font-size:13px;
-}
-
-/* Info */
-.info{
-    padding:12px;
-    border-radius:12px;
-    background:rgba(255,255,255,.04);
-    color:#8d97aa;
-    font-size:12px;
-    line-height:1.5;
-}
-
-/* Mobile */
-@media(max-width:480px){
-
-    main{
-        padding:15px 11px 40px;
-    }
-
-    .hero h1{
-        font-size:24px;
-    }
-
-    header{
-        padding:10px 12px;
-    }
-
-    .userBox{
-        max-width:120px;
-    }
-}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;min-height:100%}
+body{font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:#fff;background:#070a16;overflow-x:hidden}
+body:before,body:after{content:"";position:fixed;width:300px;height:300px;border-radius:50%;filter:blur(90px);opacity:.3;pointer-events:none;z-index:-2}
+body:before{background:#4f46e5;top:-100px;left:-100px;animation:f1 10s infinite alternate ease-in-out}
+body:after{background:#9333ea;right:-120px;bottom:-100px;animation:f2 12s infinite alternate ease-in-out}
+@keyframes f1{to{transform:translate(130px,120px)}}
+@keyframes f2{to{transform:translate(-130px,-100px)}}
+header{position:sticky;top:0;z-index:1000;height:64px;padding:10px 15px;display:flex;justify-content:space-between;align-items:center;background:rgba(7,10,22,.8);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)}
+.brand{display:flex;align-items:center;gap:10px}
+.bi{width:40px;height:40px;border-radius:13px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#6366f1,#a855f7);box-shadow:0 0 25px rgba(99,102,241,.35);font-size:20px}
+.bn{font-size:16px;font-weight:800}
+.bs{color:#8b95aa;font-size:9px}
+#who{max-width:150px;text-align:right;font-size:11px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.logout{color:#a5b4fc;text-decoration:none;font-size:10px}
+main{width:100%;max-width:650px;margin:auto;padding:18px 13px 50px}
+.hero{margin:5px 2px 17px}
+.hero h1{margin:0;font-size:26px;background:linear-gradient(90deg,#fff,#a5b4fc,#e9d5ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{margin:6px 0 0;color:#8b95aa;font-size:12px}
+.card{position:relative;padding:16px;margin-bottom:13px;border-radius:20px;background:linear-gradient(145deg,rgba(255,255,255,.085),rgba(255,255,255,.025));border:1px solid rgba(255,255,255,.08);box-shadow:0 15px 45px rgba(0,0,0,.25);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);animation:ci .3s ease}
+@keyframes ci{from{opacity:0;transform:translateY(8px)}}
+input,textarea{width:100%;border:1px solid rgba(255,255,255,.1);outline:none;background:rgba(0,0,0,.2);color:#fff;border-radius:12px;padding:12px;font-family:inherit;font-size:14px;margin-top:7px}
+textarea{resize:vertical;min-height:90px}
+input::placeholder,textarea::placeholder{color:#667085}
+input:focus,textarea:focus{border-color:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,.12)}
+button{width:100%;border:0;outline:none;padding:12px 14px;margin-top:9px;border-radius:13px;color:#fff;font-weight:700;font-size:14px;font-family:inherit;cursor:pointer;background:linear-gradient(135deg,#6366f1,#7c3aed);box-shadow:0 8px 25px rgba(99,102,241,.2);transition:.15s}
+button:active{transform:scale(.97)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.btnGreen{background:linear-gradient(135deg,#16a34a,#059669)}
+.btnRed{background:linear-gradient(135deg,#ef4444,#dc2626)}
+.btnGray{background:rgba(255,255,255,.08);box-shadow:none}
+.sm{width:auto;padding:6px 12px;margin:0;font-size:11px;border-radius:10px}
+.searchBox{position:relative;margin-bottom:15px}
+.searchIcon{position:absolute;left:14px;top:50%;transform:translateY(-50%);opacity:.6}
+.searchInput{height:48px;padding-left:42px;margin:0}
+.sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+.sh b{font-size:15px}
+.muted{color:#788398;font-size:11px}
+.ownerBanner{display:flex;align-items:center;gap:12px;padding:14px;margin-bottom:14px;border-radius:17px;background:linear-gradient(135deg,rgba(99,102,241,.18),rgba(168,85,247,.1));border:1px solid rgba(129,140,248,.18)}
+.oi{width:45px;height:45px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#6366f1,#a855f7);font-size:20px}
+.ot{font-weight:800}
+.os{color:#8993a7;font-size:10px}
+.qcard{cursor:pointer;transition:.2s}
+.qcard:hover{transform:translateY(-2px);border-color:rgba(129,140,248,.3)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.status{display:inline-block;padding:5px 9px;border-radius:99px;background:rgba(99,102,241,.13);color:#a5b4fc;border:1px solid rgba(99,102,241,.13);font-size:10px}
+.qtext{margin:10px 0 7px;color:#e4e9f2;font-size:14px;line-height:1.5;word-break:break-word;white-space:pre-wrap}
+.quser{color:#68748a;font-size:10px;word-break:break-all}
+.qrc{text-align:center}
+.qr{display:block;width:100%;max-width:250px;margin:13px auto;padding:8px;background:#fff;border-radius:17px;box-shadow:0 12px 40px rgba(0,0,0,.4)}
+.timer{font-size:34px;font-weight:900;letter-spacing:2px;color:#fb7185;text-shadow:0 0 20px rgba(251,113,133,.3);margin:3px 0;animation:pl 1s infinite}
+@keyframes pl{50%{opacity:.55}}
+.tt{color:#7d879a;font-size:11px}
+.success{padding:15px;border-radius:15px;background:rgba(34,197,94,.09);border:1px solid rgba(34,197,94,.17);color:#86efac;line-height:1.55;margin-bottom:13px}
+.empty{text-align:center;padding:30px 10px;color:#69758b;font-size:13px}
+.loginCard{margin-top:15vh;text-align:center}
+.li{width:75px;height:75px;margin:auto;display:flex;align-items:center;justify-content:center;border-radius:23px;background:linear-gradient(135deg,#6366f1,#a855f7);box-shadow:0 0 50px rgba(99,102,241,.35);font-size:34px}
+.loginCard h2{margin:14px 0 5px}
+.loginCard p{color:#8b95aa;font-size:13px}
+.info{padding:12px;border-radius:12px;background:rgba(255,255,255,.04);color:#8d97aa;font-size:12px;line-height:1.5;text-align:left}
+.amt{margin-top:12px;color:#86efac;font-weight:800}
+@media(max-width:480px){main{padding:15px 11px 40px}.hero h1{font-size:23px}#who{max-width:120px}}
 </style>
 </head>
-
 <body>
-
 <header>
-
-    <div class="brand">
-
-        <div class="brandIcon">
-            ⚡
-        </div>
-
-        <div>
-            <div class="brandName">
-                QueryX
-            </div>
-
-            <div class="brandSub">
-                Secure Query & Payment
-            </div>
-        </div>
-
-    </div>
-
-    <div id="who" class="userBox"></div>
-
+  <div class="brand"><div class="bi">⚡</div><div><div class="bn">QueryX</div><div class="bs">Secure Query &amp; Payment</div></div></div>
+  <div id="who"></div>
 </header>
-
-
-<main id="app">
-    Loading...
-</main>
-
+<main id="app">Loading...</main>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.2/firebase-app-compat.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.2/firebase-auth-compat.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.2/firebase-firestore-compat.min.js"></script>
-
-
 <script>
-
-/* =========================================================
-   FIREBASE
-========================================================= */
-
-const firebaseConfig = {
-    apiKey:"AIzaSyC0h2a3flH4xxobvbOAvazvK-Cx-QCjAIk",
-    authDomain:"queery-50e37.firebaseapp.com",
-    projectId:"queery-50e37",
-    appId:"1:990902099542:web:18921437ef23975942a5f7"
+const firebaseConfig={
+  apiKey:"AIzaSyC0h2a3flH4xxobvbOAvazvK-Cx-QCjAIk",
+  authDomain:"queery-50e37.firebaseapp.com",
+  projectId:"queery-50e37",
+  appId:"1:990902099542:web:18921437ef23975942a5f7"
 };
-
-const OWNER_EMAILS = [
-    "sdpublic900@gmail.com",
-    "studentpratyush2010@gmail.com"
-];
+const OWNER_EMAILS=["sdpublic900@gmail.com","studentpratyush2010@gmail.com"].map(e=>e.toLowerCase());
+const QR_MS=120000; // 2 minutes
 
 firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth(), db=firebase.firestore(), FV=firebase.firestore.FieldValue;
+const app=document.getElementById("app");
+const $=id=>document.getElementById(id);
 
-const auth = firebase.auth();
-const db = firebase.firestore();
+let user=null,isOwner=false;
+let listUnsub=null,qUnsub=null,setUnsub=null,tick=null;
+let queries=[],ownerQr="",openId=null,openData=null;
+let payStep=0,shotPreview="",draft=null,busy=false;
 
-const app = document.getElementById("app");
+const STATUS={new:"New Query",replied:"Payment Pending",review:"Payment Under Review",done:"Payment Confirmed"};
+const ico=s=>s==="done"?"✓":s==="review"?"◷":s==="replied"?"₹":"•";
+const esc=v=>String(v==null?"":v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const expOf=q=>q&&q.qrExpiresAt&&q.qrExpiresAt.toMillis?q.qrExpiresAt.toMillis():0;
 
-let user = null;
-let isOwner = false;
-
-let mainUnsub = null;
-let queryUnsub = null;
-
-let timerInterval = null;
-
-let currentQueries = [];
-let currentQueryId = null;
-
-
-/* =========================================================
-   STATUS
-========================================================= */
-
-const STATUS = {
-    new:"New Query",
-    replied:"Payment Pending",
-    review:"Payment Under Review",
-    done:"Payment Confirmed"
-};
-
-
-/* =========================================================
-   ESCAPE
-========================================================= */
-
-function esc(value){
-
-    return String(value || "")
-        .replace(/[&<>"]/g,function(c){
-            return {
-                "&":"&amp;",
-                "<":"&lt;",
-                ">":"&gt;",
-                '"':"&quot;"
-            }[c];
-        });
-}
-
-
-/* =========================================================
-   FILE PICKER
-========================================================= */
-
+/* ---------- Helpers ---------- */
 function pickImage(){
-
-    return new Promise(function(resolve){
-
-        const input =
-            document.createElement("input");
-
-        input.type = "file";
-        input.accept = "image/*";
-
-        input.onchange = function(){
-
-            resolve(
-                input.files &&
-                input.files[0]
-                ? input.files[0]
-                : null
-            );
-
-        };
-
-        input.click();
-
-    });
+  return new Promise(res=>{
+    const i=document.createElement("input");
+    i.type="file";i.accept="image/*";i.style.display="none";
+    document.body.appendChild(i);
+    i.onchange=()=>{res(i.files&&i.files[0]?i.files[0]:null);i.remove()};
+    i.addEventListener("cancel",()=>{res(null);i.remove()});
+    i.click();
+  });
+}
+function compressImage(file,max=900){
+  return new Promise((resolve,reject)=>{
+    const r=new FileReader();
+    r.onload=()=>{
+      const img=new Image();
+      img.onload=()=>{
+        const k=Math.min(1,max/Math.max(img.width,img.height));
+        const c=document.createElement("canvas");
+        c.width=Math.max(1,Math.round(img.width*k));
+        c.height=Math.max(1,Math.round(img.height*k));
+        const x=c.getContext("2d");
+        x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);
+        x.drawImage(img,0,0,c.width,c.height);
+        resolve(c.toDataURL("image/jpeg",.7));
+      };
+      img.onerror=reject;img.src=r.result;
+    };
+    r.onerror=reject;r.readAsDataURL(file);
+  });
+}
+function stopLists(){
+  if(listUnsub){listUnsub();listUnsub=null}
+  if(qUnsub){qUnsub();qUnsub=null}
+  clearInterval(tick);tick=null;
+}
+function cleanup(){
+  stopLists();
+  if(setUnsub){setUnsub();setUnsub=null}
+  openId=null;openData=null;ownerQr="";queries=[];
 }
 
-
-/* =========================================================
-   IMAGE COMPRESS
-========================================================= */
-
-function compressImage(file,maxSize=900){
-
-    return new Promise(function(resolve,reject){
-
-        const reader =
-            new FileReader();
-
-        reader.onload = function(){
-
-            const img =
-                new Image();
-
-            img.onload = function(){
-
-                const ratio =
-                    Math.min(
-                        1,
-                        maxSize /
-                        Math.max(
-                            img.width,
-                            img.height
-                        )
-                    );
-
-                const canvas =
-                    document.createElement("canvas");
-
-                canvas.width =
-                    Math.max(
-                        1,
-                        Math.round(
-                            img.width * ratio
-                        )
-                    );
-
-                canvas.height =
-                    Math.max(
-                        1,
-                        Math.round(
-                            img.height * ratio
-                        )
-                    );
-
-                const ctx =
-                    canvas.getContext("2d");
-
-                ctx.drawImage(
-                    img,
-                    0,
-                    0,
-                    canvas.width,
-                    canvas.height
-                );
-
-                resolve(
-                    canvas.toDataURL(
-                        "image/jpeg",
-                        .65
-                    )
-                );
-
-            };
-
-            img.onerror = reject;
-
-            img.src = reader.result;
-
-        };
-
-        reader.onerror = reject;
-
-        reader.readAsDataURL(file);
-
-    });
-}
-
-
-/* =========================================================
-   AUTH
-========================================================= */
-
-auth.onAuthStateChanged(function(u){
-
-    user = u;
-
-    isOwner =
-        !!u &&
-        OWNER_EMAILS.includes(
-            String(u.email || "").toLowerCase()
-        );
-
-    clearAllListeners();
-
-    if(!u){
-
-        document.getElementById("who").innerHTML = "";
-
-        showLogin();
-
-        return;
-    }
-
-    document.getElementById("who").innerHTML = `
-        <div>${esc(u.displayName || u.email)}</div>
-        <a
-            href="#"
-            class="logout"
-            onclick="logout();return false;"
-        >
-            Logout
-        </a>
-    `;
-
-    showHome();
-
+/* ---------- Auth ---------- */
+auth.onAuthStateChanged(u=>{
+  user=u;
+  isOwner=!!u&&OWNER_EMAILS.includes(String(u.email||"").toLowerCase());
+  cleanup();
+  if(!u){$("who").innerHTML="";showLogin();return}
+  $("who").innerHTML=`<div>${esc(u.displayName||u.email)}</div><a href="#" class="logout" onclick="auth.signOut();return false">Logout</a>`;
+  listenSettings();
+  showHome();
 });
-
-
-/* =========================================================
-   CLEANUP
-========================================================= */
-
-function clearAllListeners(){
-
-    if(mainUnsub){
-        mainUnsub();
-        mainUnsub = null;
-    }
-
-    if(queryUnsub){
-        queryUnsub();
-        queryUnsub = null;
-    }
-
-    clearInterval(timerInterval);
-    timerInterval = null;
-}
-
-
-/* =========================================================
-   LOGIN
-========================================================= */
-
 function showLogin(){
-
-    app.innerHTML = `
-
-        <div class="card loginCard">
-
-            <div class="loginIcon">
-                ⚡
-            </div>
-
-            <h2>
-                Welcome to QueryX
-            </h2>
-
-            <p>
-                Secure query and payment portal
-            </p>
-
-            <button onclick="login()">
-                Continue with Google
-            </button>
-
-        </div>
-
-    `;
+  app.innerHTML=`<div class="card loginCard"><div class="li">⚡</div><h2>Welcome to QueryX</h2><p>Secure query and payment portal</p><button onclick="login()">Continue with Google</button></div>`;
 }
-
-
 function login(){
-
-    const provider =
-        new firebase.auth.GoogleAuthProvider();
-
-    auth.signInWithPopup(provider)
-        .catch(function(error){
-
-            alert(
-                error.message ||
-                "Login failed."
-            );
-
-        });
-
+  auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e=>alert(e.message||"Login failed."));
 }
 
-
-function logout(){
-
-    auth.signOut();
-
+/* ---------- Owner QR settings ---------- */
+function listenSettings(){
+  setUnsub=db.doc("settings/owner").onSnapshot(s=>{
+    ownerQr=s.exists&&s.data().qr?s.data().qr:"";
+    if(isOwner&&$("qrCard"))$("qrCard").innerHTML=ownerQrInner();
+    if(openId)renderQueryPage();
+  },e=>console.error(e));
+}
+function ownerQrInner(){
+  return `<div class="sh"><b>Payment QR</b><span class="muted">Shown to users for 2 min</span></div>
+  ${ownerQr?`<img class="qr" src="${ownerQr}" alt="Payment QR">`:`<div class="info">No payment QR uploaded yet.</div>`}
+  <button class="btnGray" onclick="uploadOwnerQr()">${ownerQr?"Change QR":"Upload QR"}</button>
+  ${ownerQr?`<button class="btnRed" onclick="removeOwnerQr()">Remove QR</button>`:""}`;
+}
+async function uploadOwnerQr(){
+  if(!isOwner)return;
+  const f=await pickImage();if(!f)return;
+  try{
+    const img=await compressImage(f,700);
+    await db.doc("settings/owner").set({qr:img,updatedAt:FV.serverTimestamp()},{merge:true});
+  }catch(e){alert("Unable to upload QR: "+e.message)}
+}
+async function removeOwnerQr(){
+  if(!isOwner||!confirm("Remove the payment QR?"))return;
+  try{await db.doc("settings/owner").set({qr:FV.delete()},{merge:true})}
+  catch(e){alert("Unable to remove QR: "+e.message)}
 }
 
-
-/* =========================================================
-   HOME
-========================================================= */
-
+/* ---------- Home ---------- */
 function showHome(){
-
-    clearAllListeners();
-
-    let html = `
-
-        <div class="hero">
-
-            <h1>
-                ${
-                    isOwner
-                    ? "Owner Dashboard"
-                    : "Welcome Back"
-                }
-            </h1>
-
-            <p>
-                ${
-                    isOwner
-                    ? "Manage queries, payments and QR codes."
-                    : "Manage your query and payment status."
-                }
-            </p>
-
-        </div>
-
-    `;
-
-
-    if(isOwner){
-
-        html += `
-
-            <div class="ownerBanner">
-
-                <div class="ownerIcon">
-                    👑
-                </div>
-
-                <div>
-
-                    <div class="ownerTitle">
-                        Owner Panel
-                    </div>
-
-                    <div class="ownerSub">
-                        Administrator access enabled
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="card">
-
-                <div class="sectionHeader">
-                    <b>Add New Query</b>
-                    <span class="muted">Owner</span>
-                </div>
-
-                <textarea
-                    id="ownerQuery"
-                    placeholder="Write a new query..."
-                ></textarea>
-
-                <button onclick="ownerAddQuery()">
-                    Add Query
-                </button>
-
-            </div>
-
-        `;
-
-    }else{
-
-        html += `
-
-            <div class="card">
-
-                <div class="sectionHeader">
-                    <b>Send New Query</b>
-                </div>
-
-                <textarea
-                    id="userQuery"
-                    placeholder="Describe your problem or query..."
-                ></textarea>
-
-                <button onclick="userAddQuery()">
-                    Send Query
-                </button>
-
-            </div>
-
-        `;
-
-    }
-
-
-    html += `
-
-        <div class="searchBox">
-
-            <span class="searchIcon">
-                🔎
-            </span>
-
-            <input
-                id="searchInput"
-                class="searchInput"
-                placeholder="Search queries..."
-                oninput="renderQueries()"
-            >
-
-        </div>
-
-
-        <div class="sectionHeader">
-
-            <b>
-                ${isOwner ? "All Queries" : "My Queries"}
-            </b>
-
-            <span
-                id="queryCount"
-                class="muted"
-            >
-                0 queries
-            </span>
-
-        </div>
-
-
-        <div id="queryList">
-            Loading...
-        </div>
-
-    `;
-
-
-    app.innerHTML = html;
-
-
-    loadQueries();
-
+  stopLists();openId=null;openData=null;payStep=0;shotPreview="";draft=null;
+  let h=`<div class="hero"><h1>${isOwner?"Owner Dashboard":"Welcome Back"}</h1><p>${isOwner?"Manage queries, payments and the payment QR.":"Send a query and track its payment status."}</p></div>`;
+  if(isOwner){
+    h+=`<div class="ownerBanner"><div class="oi">👑</div><div><div class="ot">Owner Panel</div><div class="os">Administrator access enabled</div></div></div>
+    <div class="card qrc" id="qrCard">${ownerQrInner()}</div>
+    <div class="card"><div class="sh"><b>Add New Query</b><span class="muted">Owner</span></div>
+    <textarea id="newQuery" placeholder="Write a new query..."></textarea>
+    <button onclick="addQuery()">Add Query</button></div>`;
+  }else{
+    h+=`<div class="card"><div class="sh"><b>Send New Query</b></div>
+    <textarea id="newQuery" placeholder="Describe your problem or query..."></textarea>
+    <button onclick="addQuery()">Send Query</button></div>`;
+  }
+  h+=`<div class="searchBox"><span class="searchIcon">🔎</span><input id="searchInput" class="searchInput" placeholder="Search queries..." oninput="renderList()"></div>
+  <div class="sh"><b>${isOwner?"All Queries":"My Queries"}</b><span id="queryCount" class="muted">0 queries</span></div>
+  <div id="queryList">Loading...</div>`;
+  app.innerHTML=h;
+  const ref=isOwner?db.collection("queries").orderBy("created","desc"):db.collection("queries").where("uid","==",user.uid);
+  listUnsub=ref.onSnapshot(s=>{
+    queries=s.docs.map(d=>({id:d.id,...d.data()}));
+    queries.sort((a,b)=>((b.created&&b.created.seconds)||Infinity)-((a.created&&a.created.seconds)||Infinity));
+    renderList();
+  },e=>{
+    console.error(e);
+    if($("queryList"))$("queryList").innerHTML=`<div class="card empty">Unable to load queries.</div>`;
+  });
+}
+function renderList(){
+  const list=$("queryList");if(!list)return;
+  const s=($("searchInput")?$("searchInput").value:"").trim().toLowerCase();
+  const f=queries.filter(q=>((q.text||"")+" "+(q.name||"")+" "+(q.email||"")+" "+(STATUS[q.status]||"")).toLowerCase().includes(s));
+  if($("queryCount"))$("queryCount").textContent=f.length+(f.length===1?" query":" queries");
+  if(!f.length){list.innerHTML=`<div class="card empty">${s?"No matching queries found.":"No queries available."}</div>`;return}
+  list.innerHTML=f.map(q=>`<div class="card qcard" onclick="openQuery('${q.id}')">
+    <div class="row"><span class="status">${ico(q.status)} ${esc(STATUS[q.status]||"New Query")}</span>
+    ${isOwner?`<button class="btnRed sm" onclick="event.stopPropagation();deleteQuery('${q.id}')">Delete</button>`:`<span class="muted">Open ›</span>`}</div>
+    <div class="qtext">${esc(q.text)}</div>
+    ${isOwner?`<div class="quser">User: ${esc(q.name||q.email||"Unknown User")}</div>`:""}
+  </div>`).join("");
 }
 
-
-/* =========================================================
-   LOAD QUERIES
-========================================================= */
-
-function loadQueries(){
-
-    let ref;
-
-    if(isOwner){
-
-        ref =
-            db.collection("queries")
-              .orderBy(
-                  "created",
-                  "desc"
-              );
-
-    }else{
-
-        ref =
-            db.collection("queries")
-              .where(
-                  "uid",
-                  "==",
-                  user.uid
-              );
-
-    }
-
-
-    mainUnsub =
-        ref.onSnapshot(
-            function(snapshot){
-
-                currentQueries =
-                    snapshot.docs.map(
-                        function(doc){
-
-                            return {
-                                id:doc.id,
-                                ...doc.data()
-                            };
-
-                        }
-                    );
-
-
-                currentQueries.sort(
-                    function(a,b){
-
-                        const aTime =
-                            a.created &&
-                            a.created.seconds
-                            ? a.created.seconds
-                            : 0;
-
-                        const bTime =
-                            b.created &&
-                            b.created.seconds
-                            ? b.created.seconds
-                            : 0;
-
-                        return bTime-aTime;
-
-                    }
-                );
-
-
-                renderQueries();
-
-            },
-            function(error){
-
-                console.error(error);
-
-                const list =
-                    document.getElementById(
-                        "queryList"
-                    );
-
-                if(list){
-
-                    list.innerHTML = `
-                        <div class="card empty">
-                            Unable to load queries.
-                        </div>
-                    `;
-
-                }
-
-            }
-        );
-
+/* ---------- Add / delete query ---------- */
+async function addQuery(){
+  const i=$("newQuery");if(!i)return;
+  const text=i.value.trim();
+  if(!text){alert("Please enter a query.");return}
+  try{
+    await db.collection("queries").add({
+      uid:user.uid,
+      name:isOwner?"Owner":(user.displayName||""),
+      email:user.email||"",
+      text:text,status:"new",
+      created:FV.serverTimestamp()
+    });
+    i.value="";
+  }catch(e){alert("Unable to send query: "+e.message)}
 }
-
-
-/* =========================================================
-   RENDER
-========================================================= */
-
-function renderQueries(){
-
-    const list =
-        document.getElementById(
-            "queryList"
-        );
-
-    if(!list) return;
-
-
-    const searchInput =
-        document.getElementById(
-            "searchInput"
-        );
-
-    const search =
-        searchInput
-        ? searchInput.value
-            .trim()
-            .toLowerCase()
-        : "";
-
-
-    const filtered =
-        currentQueries.filter(
-            function(q){
-
-                const content =
-                    (
-                        (q.text || "") +
-                        " " +
-                        (q.name || "") +
-                        " " +
-                        (q.email || "") +
-                        " " +
-                        (STATUS[q.status] || "")
-                    ).toLowerCase();
-
-                return content.includes(search);
-
-            }
-        );
-
-
-    const count =
-        document.getElementById(
-            "queryCount"
-        );
-
-    if(count){
-
-        count.textContent =
-            filtered.length +
-            (
-                filtered.length === 1
-                ? " query"
-                : " queries"
-            );
-
-    }
-
-
-    if(!filtered.length){
-
-        list.innerHTML = `
-            <div class="card empty">
-                ${
-                    search
-                    ? "No matching queries found."
-                    : "No queries available."
-                }
-            </div>
-        `;
-
-        return;
-    }
-
-
-    list.innerHTML =
-        filtered.map(function(q){
-
-            return `
-
-                <div
-                    class="card queryCard"
-                    onclick="openQuery('${q.id}')"
-                >
-
-                    <div class="queryTop">
-
-                        <span class="status">
-                            ${
-                                q.status === "done"
-                                ? "✓"
-                                : q.status === "review"
-                                ? "◷"
-                                : q.status === "replied"
-                                ? "₹"
-                                : "•"
-                            }
-
-                            ${esc(
-                                STATUS[q.status] ||
-                                "New Query"
-                            )}
-                        </span>
-
-                        <span class="muted">
-                            Open ›
-                        </span>
-
-                    </div>
-
-                    <div class="queryText">
-                        ${esc(q.text)}
-                    </div>
-
-                    ${
-                        isOwner
-                        ?
-                        `
-                        <div class="queryUser">
-                            User: ${esc(
-                                q.name ||
-                                q.email ||
-                                "Unknown User"
-                            )}
-                        </div>
-                        `
-                        :
-                        ""
-                    }
-
-                </div>
-
-            `;
-
-        }).join("");
-
-}
-
-
-/* =========================================================
-   OWNER ADD QUERY
-========================================================= */
-
-async function ownerAddQuery(){
-
-    const input =
-        document.getElementById(
-            "ownerQuery"
-        );
-
-    if(!input) return;
-
-    const text =
-        input.value.trim();
-
-    if(!text){
-
-        alert(
-            "Please enter a query."
-        );
-
-        return;
-    }
-
-
-    try{
-
-        await db.collection(
-            "queries"
-        ).add({
-
-            uid:user.uid,
-
-            name:"Owner",
-
-            email:user.email,
-
-            text:text,
-
-            status:"new",
-
-            created:
-                firebase.firestore
-                .FieldValue
-                .serverTimestamp()
-
-        });
-
-
-        input.value = "";
-
-    }catch(error){
-
-        alert(
-            "Unable to add query: " +
-            error.message
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   USER ADD QUERY
-========================================================= */
-
-async function userAddQuery(){
-
-    const input =
-        document.getElementById(
-            "userQuery"
-        );
-
-    if(!input) return;
-
-    const text =
-        input.value.trim();
-
-    if(!text){
-
-        alert(
-            "Please enter your query."
-        );
-
-        return;
-    }
-
-
-    try{
-
-        await db.collection(
-            "queries"
-        ).add({
-
-            uid:user.uid,
-
-            name:
-                user.displayName || "",
-
-            email:
-                user.email || "",
-
-            text:text,
-
-            status:"new",
-
-            created:
-                firebase.firestore
-                .FieldValue
-                .serverTimestamp()
-
-        });
-
-
-        input.value = "";
-
-    }catch(error){
-
-        alert(
-            "Unable to send query: " +
-            error.message
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   DELETE QUERY
-========================================================= */
-
 async function deleteQuery(id){
-
-    if(!isOwner) return;
-
-
-    const yes =
-        confirm(
-            "Are you sure you want to delete this query?"
-        );
-
-
-    if(!yes) return;
-
-
-    try{
-
-        await db.doc(
-            "queries/" + id
-        ).delete();
-
-
-        showHome();
-
-    }catch(error){
-
-        alert(
-            "Unable to delete query: " +
-            error.message
-        );
-
-    }
-
+  if(!isOwner||!confirm("Are you sure you want to delete this query? This cannot be undone."))return;
+  try{
+    await db.doc("queries/"+id).delete();
+    if(openId===id)showHome();
+  }catch(e){alert("Unable to delete query: "+e.message)}
 }
 
-
-/* =========================================================
-   OPEN QUERY
-========================================================= */
-
+/* ---------- Open query ---------- */
 function openQuery(id){
-
-    currentQueryId = id;
-
-    if(mainUnsub){
-
-        mainUnsub();
-        mainUnsub = null;
-
+  stopLists();
+  openId=id;openData=null;payStep=0;shotPreview="";draft=null;busy=false;
+  app.innerHTML=`<button class="btnGray" style="width:auto;margin:0 0 12px" onclick="showHome()">← Back</button><div id="queryPage">Loading...</div>`;
+  let first=true;
+  qUnsub=db.doc("queries/"+id).onSnapshot(s=>{
+    if(!s.exists){
+      clearInterval(tick);tick=null;openData=null;
+      if($("queryPage"))$("queryPage").innerHTML=`<div class="card empty">This query no longer exists.</div>`;
+      return;
     }
-
-    if(queryUnsub){
-
-        queryUnsub();
-        queryUnsub = null;
-
-    }
-
-
-    clearInterval(timerInterval);
-    timerInterval = null;
-
-
-    app.innerHTML = `
-
-        <button
-            class="btnGray"
-            style="width:auto;margin-bottom:12px"
-            onclick="showHome()"
-        >
-            ← Back
-        </button>
-
-        <div id="queryPage">
-            Loading...
-        </div>
-
-    `;
-
-
-    queryUnsub =
-        db.doc(
-            "queries/" + id
-        ).onSnapshot(
-            async function(snapshot){
-
-                if(!snapshot.exists){
-
-                    app.innerHTML = `
-
-                        <div class="card empty">
-                            This query no longer exists.
-                        </div>
-
-                    `;
-
-                    return;
-
-                }
-
-
-                const q =
-                    snapshot.data();
-
-
-                renderQueryPage(
-                    id,
-                    q
-                );
-
-            },
-            function(error){
-
-                console.error(error);
-
-                const page =
-                    document.getElementById(
-                        "queryPage"
-                    );
-
-                if(page){
-
-                    page.innerHTML = `
-                        <div class="card empty">
-                            Unable to load this query.
-                        </div>
-                    `;
-
-                }
-
-            }
-        );
-
+    openData={id,...s.data()};
+    // Users: clicking a query starts a fresh 2-minute QR session (if none is running)
+    if(!isOwner&&first){first=false;startSession(openData)}
+    first=false;
+    renderQueryPage();
+  },e=>{
+    console.error(e);
+    if($("queryPage"))$("queryPage").innerHTML=`<div class="card empty">Unable to load this query.</div>`;
+  });
+}
+/* The expiry time is stored in Firestore, so the timer keeps running
+   in the background and survives refresh, tab switch or closing the app. */
+async function startSession(q){
+  if(q.status!=="replied"||expOf(q)>Date.now())return;
+  try{
+    const s=await db.doc("settings/owner").get();
+    if(!s.exists||!s.data().qr)return;
+    await db.doc("queries/"+q.id).update({
+      qrExpiresAt:firebase.firestore.Timestamp.fromMillis(Date.now()+QR_MS)
+    });
+  }catch(e){console.error("Session start error:",e)}
 }
 
-
-/* =========================================================
-   QUERY PAGE
-========================================================= */
-
-async function renderQueryPage(
-    id,
-    q
-){
-
-    const page =
-        document.getElementById(
-            "queryPage"
-        );
-
-    if(!page) return;
-
-
-    clearInterval(timerInterval);
-
-
-    let qrData = null;
-
-
-    /*
-       QR IS STORED INSIDE THE QUERY.
-       Therefore every query has its own QR
-       and its own expiry timer.
-    */
-
-    if(
-        q.qr &&
-        q.qrExpiresAt
-    ){
-
-        const expiry =
-            q.qrExpiresAt.toMillis();
-
-
-        if(
-            Date.now() < expiry
-        ){
-
-            qrData = {
-                image:q.qr,
-                expiry:expiry
-            };
-
-        }
-
-    }
-
-
-    page.innerHTML = `
-
-        <div class="card">
-
-            <div class="queryTop">
-
-                <span class="status">
-                    ${
-                        q.status === "done"
-                        ? "✓"
-                        : q.status === "review"
-                        ? "◷"
-                        : q.status === "replied"
-                        ? "₹"
-                        : "•"
-                    }
-
-                    ${esc(
-                        STATUS[q.status] ||
-                        "New Query"
-                    )}
-                </span>
-
-                ${
-                    isOwner
-                    ?
-                    `
-                    <span
-                        class="muted"
-                    >
-                        Owner View
-                    </span>
-                    `
-                    :
-                    ""
-                }
-
-            </div>
-
-
-            <div class="queryText">
-                ${esc(q.text)}
-            </div>
-
-
-            ${
-                isOwner
-                ?
-                `
-                <div class="queryUser">
-                    User:
-                    ${esc(
-                        q.name ||
-                        q.email ||
-                        "Unknown"
-                    )}
-                </div>
-                `
-                :
-                ""
-            }
-
-        </div>
-
-
-        ${
-            q.reply
-            ?
-            `
-            <div class="card">
-
-                <div class="sectionHeader">
-                    <b>Owner Reply</b>
-                </div>
-
-                <div class="queryText">
-                    ${esc(q.reply)}
-                </div>
-
-                ${
-                    q.link
-                    ?
-                    `
-                    <a
-                        href="${esc(q.link)}"
-                        target="_blank"
-                        style="
-                            color:#a5b4fc;
-                            text-decoration:none;
-                            font-size:13px;
-                        "
-                    >
-                        Open Recording / Link
-                    </a>
-                    `
-                    :
-                    ""
-                }
-
-
-                ${
-                    q.amount
-                    ?
-                    `
-                    <div
-                        style="
-                            margin-top:12px;
-                            color:#86efac;
-                            font-weight:800;
-                        "
-                    >
-                        Payment Amount:
-                        ₹${esc(
-                            String(q.amount)
-                        )}
-                    </div>
-                    `
-                    :
-                    ""
-                }
-
-            </div>
-            `
-            :
-            ""
-        }
-
-
-        ${
-            isOwner
-            ?
-            ownerQueryPanel(id,q)
-            :
-            userQueryPanel(id,q,qrData)
-        }
-
-    `;
-
-
-    /*
-       Start timer after rendering.
-       It uses the Firestore timestamp,
-       so refresh does NOT restart it.
-    */
-
-    if(qrData){
-
-        startTimer(
-            id,
-            qrData.expiry
-        );
-
-    }
-
+/* ---------- Query page ---------- */
+function renderQueryPage(){
+  const page=$("queryPage");if(!page||!openData)return;
+  const q=openData;
+  if(isOwner&&$("replyInput")){
+    draft={reply:$("replyInput").value,link:$("linkInput").value,amount:$("amountInput").value};
+  }
+  let h=`<div class="card"><div class="row"><span class="status">${ico(q.status)} ${esc(STATUS[q.status]||"New Query")}</span>${isOwner?`<span class="muted">Owner View</span>`:""}</div>
+  <div class="qtext">${esc(q.text)}</div>
+  ${isOwner?`<div class="quser">User: ${esc(q.name||"Unknown")} · ${esc(q.email||"")}</div>`:""}</div>`;
+  if(q.reply)h+=replyCard(q);
+  h+=isOwner?ownerPanel(q):userPanel(q);
+  page.innerHTML=h;
+  startTick();
+}
+function replyCard(q){
+  return `<div class="card"><div class="sh"><b>Owner Reply</b></div><div class="qtext">${esc(q.reply)}</div>
+  ${q.link&&/^https?:\/\//i.test(q.link)?`<a href="${esc(q.link)}" target="_blank" rel="noopener noreferrer" style="color:#a5b4fc;text-decoration:none;font-size:13px">Open Recording / Link</a>`:""}
+  ${q.amount?`<div class="amt">Payment Amount: ₹${esc(q.amount)}</div>`:""}</div>`;
 }
 
-
-/* =========================================================
-   OWNER QUERY PANEL
-========================================================= */
-
-function ownerQueryPanel(id,q){
-
-    if(
-        q.status === "new" ||
-        q.status === "replied"
-    ){
-
-        return `
-
-            <div class="card">
-
-                <div class="sectionHeader">
-                    <b>
-                        Reply & Payment
-                    </b>
-                </div>
-
-
-                <textarea
-                    id="replyInput"
-                    placeholder="Write your reply..."
-                >${esc(
-                    q.reply || ""
-                )}</textarea>
-
-
-                <input
-                    id="linkInput"
-                    placeholder="Recording / Link"
-                    value="${esc(
-                        q.link || ""
-                    )}"
-                >
-
-
-                <input
-                    id="amountInput"
-                    type="number"
-                    placeholder="Payment Amount"
-                    value="${esc(
-                        q.amount || ""
-                    )}"
-                >
-
-
-                <button
-                    onclick="
-                        sendReply('${id}')
-                    "
-                >
-                    Save Reply & Payment
-                </button>
-
-
-                <button
-                    class="btnRed"
-                    onclick="
-                        deleteQuery('${id}')
-                    "
-                >
-                    Delete Query
-                </button>
-
-            </div>
-
-
-            ${
-                q.status === "replied"
-                ?
-                ownerQrPanel(id,q)
-                :
-                ""
-            }
-
-        `;
-
-    }
-
-
-    if(q.status === "review"){
-
-        return `
-
-            <div class="card">
-
-                <div class="sectionHeader">
-                    <b>
-                        Payment Screenshot
-                    </b>
-                </div>
-
-
-                ${
-                    q.paymentScreenshot
-                    ?
-                    `
-                    <img
-                        class="qr"
-                        src="${esc(
-                            q.paymentScreenshot
-                        )}"
-                    >
-                    `
-                    :
-                    `
-                    <div class="info">
-                        No screenshot uploaded.
-                    </div>
-                    `
-                }
-
-
-                <button
-                    class="btnGreen"
-                    onclick="
-                        confirmPayment('${id}')
-                    "
-                >
-                    Confirm Payment
-                </button>
-
-
-                <button
-                    class="btnRed"
-                    onclick="
-                        deleteQuery('${id}')
-                    "
-                >
-                    Delete Query
-                </button>
-
-            </div>
-
-        `;
-
-    }
-
-
-    if(q.status === "done"){
-
-        return `
-
-            <div class="success">
-                Payment confirmed.
-                <br>
-                The user has been notified that
-                the query will be solved within 5 days.
-            </div>
-
-            <button
-                class="btnRed"
-                onclick="
-                    deleteQuery('${id}')
-                "
-            >
-                Delete Query
-            </button>
-
-        `;
-
-    }
-
-
-    return "";
-
+/* ---------- User panel ---------- */
+function userPanel(q){
+  const exp=expOf(q),active=exp>Date.now();
+  if(q.status==="new")return `<div class="card"><div class="info">Your query has been received. Please wait for the owner's reply.</div></div>`;
+  if(q.status==="replied"){
+    if(payStep===1)return shotCard();
+    let body;
+    if(active&&ownerQr)body=`<img class="qr" src="${ownerQr}" alt="Payment QR"><div class="timer tmr">--:--</div><div class="tt">This QR will disappear automatically when the timer ends.</div>`;
+    else if(!active&&exp>0)body=`<div class="info">The QR code has expired. Go back and open this query again to get a new QR code.</div>`;
+    else body=`<div class="info">The payment QR is not available yet. Please try again in a little while.</div>`;
+    return `<div class="card qrc"><div class="sh"><b>Make Payment</b>${q.amount?`<span class="muted">₹${esc(q.amount)}</span>`:""}</div>${body}
+    ${(active||exp>0)?`<button class="btnGreen" onclick="setStep(1)">I Have Paid</button>`:""}</div>`;
+  }
+  if(q.status==="review")return `<div class="card"><div class="info">Your payment screenshot has been uploaded successfully.<br><br>Please wait while the owner verifies your payment.</div></div>`;
+  if(q.status==="done")return `<div class="success"><b>Payment Confirmed</b><br><br>Your payment has been confirmed.<br><br><b>Your query will be solved within 5 days.</b></div>`;
+  return "";
+}
+function setStep(n){payStep=n;if(n===0)shotPreview="";renderQueryPage()}
+function shotCard(){
+  return `<div class="card qrc"><div class="sh"><b>Upload Payment Screenshot</b></div>
+  <div class="info">Please upload a clear screenshot of your successful payment.</div>
+  ${shotPreview?`<img class="qr" src="${shotPreview}" alt="Payment screenshot">`:""}
+  <button class="btnGray" onclick="chooseShot()">${shotPreview?"Choose Another Screenshot":"Choose Screenshot"}</button>
+  ${shotPreview?`<button class="btnGreen" onclick="submitShot()">Submit Screenshot</button>`:""}
+  <button class="btnGray" onclick="setStep(0)">Back</button></div>`;
+}
+async function chooseShot(){
+  const f=await pickImage();if(!f)return;
+  try{shotPreview=await compressImage(f,1000);renderQueryPage()}
+  catch(e){alert("Unable to read this image.")}
+}
+async function submitShot(){
+  if(busy||!shotPreview||!openId)return;
+  busy=true;
+  try{
+    await db.doc("queries/"+openId).update({
+      paymentScreenshot:shotPreview,
+      status:"review",
+      qrExpiresAt:FV.delete()
+    });
+    payStep=0;shotPreview="";
+  }catch(e){alert("Unable to upload screenshot: "+e.message)}
+  busy=false;
 }
 
-
-/* =========================================================
-   OWNER QR PANEL
-========================================================= */
-
-function ownerQrPanel(id,q){
-
-    let active =
-        q.qr &&
-        q.qrExpiresAt &&
-        q.qrExpiresAt.toMillis() > Date.now();
-
-
-    return `
-
-        <div class="card qrContainer">
-
-            <div class="sectionHeader">
-                <b>
-                    Payment QR
-                </b>
-
-                <span class="muted">
-                    2 minute timer
-                </span>
-            </div>
-
-
-            ${
-                active
-                ?
-                `
-                <img
-                    class="qr"
-                    src="${esc(q.qr)}"
-                >
-
-                <div
-                    id="ownerTimer"
-                    class="timer"
-                >
-                    --:--
-                </div>
-
-                <div class="timerText">
-                    QR will disappear automatically
-                    when the timer ends.
-                </div>
-                `
-                :
-                `
-                <div class="info">
-                    No active QR for this query.
-                </div>
-                `
-            }
-
-
-            <button
-                onclick="
-                    uploadQueryQR('${id}')
-                "
-            >
-                ${
-                    active
-                    ? "Change QR"
-                    : "Upload QR"
-                }
-            </button>
-
-        </div>
-
-    `;
-
+/* ---------- Owner panel ---------- */
+function ownerPanel(q){
+  const exp=expOf(q),active=exp>Date.now();
+  const del=`<button class="btnRed" onclick="deleteQuery('${q.id}')">Delete Query</button>`;
+  if(q.status==="new"||q.status==="replied"){
+    const d=draft||{reply:q.reply||"",link:q.link||"",amount:q.amount||""};
+    return `<div class="card"><div class="sh"><b>Reply &amp; Payment</b></div>
+    <textarea id="replyInput" placeholder="Write your reply...">${esc(d.reply)}</textarea>
+    <input id="linkInput" placeholder="Recording / Link (optional)" value="${esc(d.link)}">
+    <input id="amountInput" type="number" min="1" placeholder="Payment Amount (₹)" value="${esc(d.amount)}">
+    <button onclick="sendReply('${q.id}')">Save Reply &amp; Request Payment</button>${del}</div>
+    ${q.status==="replied"?`<div class="card"><div class="info">${active?`The user is viewing the QR. It expires in <b class="tmr">--:--</b>.`:`No active QR session. A new 2-minute session starts when the user opens this query.`}</div></div>`:""}`;
+  }
+  if(q.status==="review"){
+    return `<div class="card qrc"><div class="sh"><b>Payment Screenshot</b></div>
+    ${q.paymentScreenshot?`<img class="qr" src="${q.paymentScreenshot}" alt="Payment screenshot">`:`<div class="info">No screenshot uploaded.</div>`}
+    <button class="btnGreen" onclick="confirmPayment('${q.id}')">Confirm Payment</button>${del}</div>`;
+  }
+  if(q.status==="done"){
+    return `<div class="success">Payment confirmed.<br>The user can now see: "Your query will be solved within 5 days."</div>
+    ${q.paymentScreenshot?`<div class="card qrc"><div class="sh"><b>Payment Screenshot</b></div><img class="qr" src="${q.paymentScreenshot}" alt="Payment screenshot"></div>`:""}${del}`;
+  }
+  return "";
 }
-
-
-/* =========================================================
-   USER QUERY PANEL
-========================================================= */
-
-function userQueryPanel(
-    id,
-    q,
-    qrData
-){
-
-    if(q.status === "new"){
-
-        return `
-
-            <div class="card">
-
-                <div class="info">
-                    Your query has been received.
-                    Please wait for the owner's reply.
-                </div>
-
-            </div>
-
-        `;
-
-    }
-
-
-    if(q.status === "replied"){
-
-        return `
-
-            <div class="card qrContainer">
-
-                <div class="sectionHeader">
-                    <b>
-                        Payment
-                    </b>
-                </div>
-
-
-                ${
-                    qrData
-                    ?
-                    `
-                    <img
-                        class="qr"
-                        src="${esc(
-                            qrData.image
-                        )}"
-                    >
-
-                    <div
-                        id="userTimer"
-                        class="timer"
-                    >
-                        --:--
-                    </div>
-
-                    <div class="timerText">
-                        QR expires automatically
-                        when the timer reaches zero.
-                    </div>
-                    `
-                    :
-                    `
-                    <div class="info">
-                        The payment QR is currently
-                        unavailable. Please wait for
-                        the owner to activate it.
-                    </div>
-                    `
-                }
-
-
-                <button
-                    class="btnGreen"
-                    onclick="
-                        paymentDone('${id}')
-                    "
-                >
-                    Payment Done
-                </button>
-
-            </div>
-
-        `;
-
-    }
-
-
-    if(q.status === "review"){
-
-        return `
-
-            <div class="card">
-
-                <div class="info">
-                    Payment screenshot uploaded
-                    successfully.
-                    <br><br>
-                    Please wait while the owner
-                    verifies your payment.
-                </div>
-
-            </div>
-
-        `;
-
-    }
-
-
-    if(q.status === "done"){
-
-        return `
-
-            <div class="success">
-
-                <b>Payment Confirmed</b>
-
-                <br><br>
-
-                Your payment has been confirmed.
-
-                <br><br>
-
-                <b>
-                    Your query will be solved
-                    within 5 days.
-                </b>
-
-            </div>
-
-        `;
-
-    }
-
-
-    return "";
-
-}
-
-
-/* =========================================================
-   UPLOAD QR FOR QUERY
-========================================================= */
-
-async function uploadQueryQR(id){
-
-    if(!isOwner) return;
-
-
-    const file =
-        await pickImage();
-
-
-    if(!file) return;
-
-
-    try{
-
-        const image =
-            await compressImage(
-                file,
-                700
-            );
-
-
-        /*
-           EXACTLY 2 MINUTES
-        */
-
-        const expiry =
-            firebase.firestore
-            .Timestamp.fromMillis(
-                Date.now() + 120000
-            );
-
-
-        await db.doc(
-            "queries/" + id
-        ).update({
-
-            qr:image,
-
-            qrExpiresAt:expiry,
-
-            status:"replied"
-
-        });
-
-
-    }catch(error){
-
-        alert(
-            "Unable to upload QR: " +
-            error.message
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   TIMER
-========================================================= */
-
-function startTimer(
-    id,
-    expiry
-){
-
-    clearInterval(timerInterval);
-
-
-    function update(){
-
-        /*
-           IMPORTANT:
-           Remaining time is calculated from
-           the Firestore expiry timestamp.
-
-           Therefore refreshing the page,
-           changing tabs, or opening another
-           query will NOT restart the timer.
-        */
-
-        const remaining =
-            Math.max(
-                0,
-                expiry - Date.now()
-            );
-
-
-        const seconds =
-            Math.ceil(
-                remaining / 1000
-            );
-
-
-        const minutes =
-            Math.floor(
-                seconds / 60
-            );
-
-
-        const secs =
-            seconds % 60;
-
-
-        const formatted =
-            minutes +
-            ":" +
-            String(secs)
-                .padStart(2,"0");
-
-
-        const userTimer =
-            document.getElementById(
-                "userTimer"
-            );
-
-        const ownerTimer =
-            document.getElementById(
-                "ownerTimer"
-            );
-
-
-        if(userTimer){
-
-            userTimer.textContent =
-                formatted;
-
-        }
-
-
-        if(ownerTimer){
-
-            ownerTimer.textContent =
-                formatted;
-
-        }
-
-
-        if(seconds <= 0){
-
-            clearInterval(
-                timerInterval
-            );
-
-            timerInterval = null;
-
-            expireQueryQR(id);
-
-        }
-
-    }
-
-
-    update();
-
-
-    timerInterval =
-        setInterval(
-            update,
-            1000
-        );
-
-}
-
-
-/* =========================================================
-   EXPIRE QR
-========================================================= */
-
-async function expireQueryQR(id){
-
-    try{
-
-        const ref =
-            db.doc(
-                "queries/" + id
-            );
-
-
-        const snap =
-            await ref.get();
-
-
-        if(!snap.exists) return;
-
-
-        const q =
-            snap.data();
-
-
-        /*
-           Only remove the QR if its stored
-           expiry has actually passed.
-        */
-
-        if(
-            q.qrExpiresAt &&
-            q.qrExpiresAt.toMillis() <= Date.now()
-        ){
-
-            await ref.update({
-
-                qr:
-                    firebase.firestore
-                    .FieldValue
-                    .delete(),
-
-                qrExpiresAt:
-                    firebase.firestore
-                    .FieldValue
-                    .delete()
-
-            });
-
-        }
-
-    }catch(error){
-
-        console.error(
-            "QR expiry error:",
-            error
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   PAYMENT DONE
-========================================================= */
-
-async function paymentDone(id){
-
-    /*
-       First ask user to upload screenshot.
-    */
-
-    const file =
-        await pickImage();
-
-
-    if(!file) return;
-
-
-    try{
-
-        const screenshot =
-            await compressImage(
-                file,
-                1000
-            );
-
-
-        await db.doc(
-            "queries/" + id
-        ).update({
-
-            paymentScreenshot:
-                screenshot,
-
-            status:"review"
-
-        });
-
-
-    }catch(error){
-
-        alert(
-            "Unable to upload screenshot: " +
-            error.message
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   SEND REPLY
-========================================================= */
-
 async function sendReply(id){
-
-    const reply =
-        document.getElementById(
-            "replyInput"
-        ).value.trim();
-
-
-    const link =
-        document.getElementById(
-            "linkInput"
-        ).value.trim();
-
-
-    const amount =
-        document.getElementById(
-            "amountInput"
-        ).value.trim();
-
-
-    try{
-
-        await db.doc(
-            "queries/" + id
-        ).update({
-
-            reply:reply,
-
-            link:link,
-
-            amount:amount,
-
-            status:"replied"
-
-        });
-
-
-        alert(
-            "Reply saved successfully."
-        );
-
-    }catch(error){
-
-        alert(
-            "Unable to save reply: " +
-            error.message
-        );
-
-    }
-
+  if(!isOwner)return;
+  const reply=$("replyInput").value.trim();
+  const link=$("linkInput").value.trim();
+  const amount=$("amountInput").value.trim();
+  if(!reply){alert("Please write a reply.");return}
+  if(!(Number(amount)>0)){alert("Please enter a valid payment amount.");return}
+  if(link&&!/^https?:\/\//i.test(link)){alert("The link must start with http:// or https://");return}
+  try{
+    await db.doc("queries/"+id).update({reply,link,amount,status:"replied"});
+    draft=null;
+    alert(ownerQr?"Reply saved. The user can now pay.":"Reply saved. Please upload a payment QR from the dashboard so the user can pay.");
+  }catch(e){alert("Unable to save reply: "+e.message)}
 }
-
-
-/* =========================================================
-   CONFIRM PAYMENT
-========================================================= */
-
 async function confirmPayment(id){
-
-    if(!isOwner) return;
-
-
-    const yes =
-        confirm(
-            "Confirm this payment?"
-        );
-
-
-    if(!yes) return;
-
-
-    try{
-
-        await db.doc(
-            "queries/" + id
-        ).update({
-
-            status:"done",
-
-            paymentConfirmedAt:
-                firebase.firestore
-                .FieldValue
-                .serverTimestamp()
-
-        });
-
-    }catch(error){
-
-        alert(
-            "Unable to confirm payment: " +
-            error.message
-        );
-
-    }
-
+  if(!isOwner||!confirm("Confirm this payment?"))return;
+  try{
+    await db.doc("queries/"+id).update({status:"done",paymentConfirmedAt:FV.serverTimestamp()});
+  }catch(e){alert("Unable to confirm payment: "+e.message)}
 }
 
+/* ---------- Live countdown (calculated from stored expiry) ---------- */
+function startTick(){
+  clearInterval(tick);tick=null;
+  if(!openData||openData.status!=="replied")return;
+  const exp=expOf(openData);
+  if(exp<=Date.now())return;
+  const upd=()=>{
+    const left=Math.max(0,exp-Date.now());
+    const s=Math.ceil(left/1000);
+    const t=Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
+    document.querySelectorAll(".tmr").forEach(e=>e.textContent=t);
+    if(left<=0){clearInterval(tick);tick=null;renderQueryPage()} // QR disappears
+  };
+  upd();
+  tick=setInterval(upd,1000);
+}
 </script>
-
 </body>
-  </html>
+</html>
