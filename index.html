@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Query & Payment</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;background:#f4f5f7;color:#222}
+header{background:#4f46e5;color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+main{max-width:560px;margin:0 auto;padding:14px}
+.card{background:#fff;border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:0 1px 3px #0002}
+button{background:#4f46e5;color:#fff;border:0;border-radius:8px;padding:10px 14px;font-size:15px;margin-top:8px}
+button.g{background:#16a34a}button.o{background:#999}
+input,textarea{width:100%;padding:10px;border:1px solid #ccc;border-radius:8px;font-size:15px;margin-top:6px}
+img.qr{max-width:100%;display:block;margin:8px auto;border-radius:8px}
+.tag{font-size:12px;padding:2px 8px;border-radius:99px;background:#e0e7ff;color:#3730a3}
+.ok{background:#dcfce7;color:#166534;padding:10px;border-radius:8px;margin-top:8px}
+small{color:#666}
+</style></head><body>
+<header><b>Query & Payment</b><span id="who"></span></header>
+<main id="app">Loading...</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.2/firebase-app-compat.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.2/firebase-auth-compat.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/firebase/10.12.2/firebase-firestore-compat.min.js"></script>
+<script>
+// ====== Firebase config (already filled) and Owner Gmail ======
+const firebaseConfig = {
+  apiKey: "AIzaSyC0h2a3flH4xxobvbOAvazvK-Cx-QCjAIk",
+  authDomain: "queery-50e37.firebaseapp.com",
+  projectId: "queery-50e37",
+  appId: "1:990902099542:web:18921437ef23975942a5f7"
+};
+const OWNER_EMAILS = ["owner1@gmail.com","owner2@gmail.com"];
+// ==============================================================
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth(), db = firebase.firestore();
+const $ = document.getElementById('app');
+let user = null, isOwner = false, unsub = null, openId = null;
+
+const STATUS = {
+  new: "New query", replied: "Payment pending", review: "Owner is checking", done: "Confirmed ✔"
+};
+const esc = s => (s||"").replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function shrink(file, max = 900) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => { const i = new Image();
+      i.onload = () => { const k = Math.min(1, max / Math.max(i.width, i.height));
+        const c = document.createElement('canvas'); c.width = i.width*k; c.height = i.height*k;
+        c.getContext('2d').drawImage(i, 0, 0, c.width, c.height); res(c.toDataURL('image/jpeg', .6)); };
+      i.onerror = rej; i.src = r.result; };
+    r.onerror = rej; r.readAsDataURL(file);
+  });
+}
+const pick = () => new Promise(res => { const f = document.createElement('input'); f.type='file'; f.accept='image/*';
+  f.onchange = () => res(f.files[0]); f.click(); });
+
+auth.onAuthStateChanged(u => {
+  user = u; isOwner = !!u && sdpublic900@gmail.com,studentpratyush2010@gmail.com.includes(u.email);
+  document.getElementById('who').innerHTML = u ? `${esc(u.displayName||u.email)} <a href="#" onclick="auth.signOut();return false" style="color:#fff">(Logout)</a>` : '';
+  if (unsub) unsub(); openId = null;
+  if (!u) return loginView();
+  home();
+});
+
+function loginView() {
+  $.innerHTML = `<div class="card"><h3>Welcome</h3><p>Login with Google to send your query.</p>
+  <button onclick="auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())">Login with Google</button></div>`;
+}
+
+function home() {
+  openId = null; if (unsub) unsub();
+  const q = isOwner ? db.collection('queries').orderBy('created','desc')
+                    : db.collection('queries').where('uid','==',user.uid);
+  $.innerHTML = (isOwner ? ownerBox() : `<div class="card"><b>New query</b>
+    <textarea id="qt" rows="3" placeholder="Write your problem / query"></textarea>
+    <button onclick="addQuery()">Send query</button></div>`) + `<div id="list">...</div>`;
+  if (isOwner) loadMyQr();
+  unsub = q.onSnapshot(s => {
+    const docs = s.docs.map(d => ({id:d.id, ...d.data()})).sort((a,b)=>(b.created?.seconds||0)-(a.created?.seconds||0));
+    document.getElementById('list').innerHTML = docs.length ? docs.map(d => `
+      <div class="card" onclick="openQ('${d.id}')">
+        <span class="tag">${STATUS[d.status]||d.status}</span>
+        <p>${esc(d.text)}</p><small>${isOwner ? esc(d.name||d.email) : ''}</small></div>`).join('')
+      : '<small>No queries yet.</small>';
+  });
+}
+
+function ownerBox() {
+  return `<div class="card"><b>My payment QR</b><div id="myqr"></div>
+  <button class="o" onclick="setQr()">Upload / change QR</button></div>`;
+}
+async function loadMyQr() {
+  const d = await db.doc('settings/owner').get();
+  document.getElementById('myqr').innerHTML = d.exists && d.data().qr ? `<img class="qr" src="${d.data().qr}" style="max-width:200px">` : '<small>No QR uploaded yet</small>';
+}
+async function setQr() {
+  const f = await pick(); if (!f) return;
+  await db.doc('settings/owner').set({qr: await shrink(f, 700)}); loadMyQr();
+}
+
+async function addQuery() {
+  const t = document.getElementById('qt').value.trim(); if (!t) return;
+  await db.collection('queries').add({uid:user.uid, name:user.displayName||'', email:user.email, text:t,
+    status:'new', created:firebase.firestore.FieldValue.serverTimestamp()});
+  document.getElementById('qt').value = '';
+}
+
+function openQ(id) {
+  if (unsub) unsub(); openId = id;
+  unsub = db.doc('queries/'+id).onSnapshot(async s => {
+    const d = s.data(); if (!d) return;
+    let qr = '';
+    if (d.status === 'replied' || d.status === 'review' || d.status === 'done') {
+      const o = await db.doc('settings/owner').get(); qr = o.exists ? o.data().qr : '';
+    }
+    $.innerHTML = `<button class="o" onclick="home()">← Back</button>
+    <div class="card"><span class="tag">${STATUS[d.status]}</span>
+      <p><b>${esc(d.text)}</b></p>${isOwner?`<small>${esc(d.name)} · ${esc(d.email)}</small>`:''}</div>
+    ${d.reply ? `<div class="card"><b>Owner's reply</b><p>${esc(d.reply)}</p>
+      ${d.link ? `<a href="${esc(d.link)}" target="_blank">🎥 View recording / QR</a>` : ''}
+      ${d.amount ? `<p>Amount: <b>₹${esc(String(d.amount))}</b></p>` : ''}</div>` : ''}
+    ${isOwner ? ownerPanel(d, id) : userPanel(d, id, qr)}`;
+  });
+}
+
+function ownerPanel(d, id) {
+  if (d.status === 'new' || d.status === 'replied') return `<div class="card"><b>Send reply</b>
+    <textarea id="rp" rows="3" placeholder="Reply">${esc(d.reply||'')}</textarea>
+    <input id="lk" placeholder="Recording / QR link" value="${esc(d.link||'')}">
+    <input id="am" type="number" placeholder="Amount ₹" value="${esc(String(d.amount||''))}">
+    <button onclick="sendReply('${id}')">Send and request payment</button></div>`;
+  if (d.status === 'review') return `<div class="card"><b>Payment screenshot</b>
+    <img class="qr" src="${d.shot}">
+    <button class="g" onclick="confirmPay('${id}')">✔ Confirm payment</button></div>`;
+  return `<div class="ok">Payment has been confirmed.</div>`;
+}
+function userPanel(d, id, qr) {
+  if (d.status === 'new') return `<div class="card"><small>Please wait for the owner's reply...</small></div>`;
+  if (d.status === 'replied') return `<div class="card"><b>Make payment</b>
+    ${qr ? `<img class="qr" src="${qr}">` : '<small>QR not available</small>'}
+    <p>After paying through this QR, tap the button below.</p>
+    <button class="g" onclick="paid('${id}')">Payment done – Upload screenshot</button></div>`;
+  if (d.status === 'review') return `<div class="card"><small>Screenshot sent. Please wait for the owner to confirm...</small></div>`;
+  return `<div class="ok">✅ Payment confirmed!<br>Everything will be fixed within 5 days.</div>`;
+}
+
+async function sendReply(id) {
+  await db.doc('queries/'+id).update({reply:rp.value.trim(), link:lk.value.trim(), amount:am.value, status:'replied'});
+}
+async function paid(id) {
+  const f = await pick(); if (!f) return;
+  await db.doc('queries/'+id).update({shot: await shrink(f), status:'review'});
+}
+async function confirmPay(id) {
+  await db.doc('queries/'+id).update({status:'done'});
+}
+</script></body></html>
