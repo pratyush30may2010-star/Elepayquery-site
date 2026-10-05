@@ -68,6 +68,10 @@ button:disabled{opacity:.5;cursor:not-allowed}
 .info{padding:12px;border-radius:12px;background:rgba(255,255,255,.04);color:#8d97aa;font-size:12px;line-height:1.5;text-align:left}
 .amt{margin-top:12px;color:#86efac;font-weight:800}
 @media(max-width:480px){main{padding:15px 11px 40px}.hero h1{font-size:23px}#who{max-width:120px}}
+.ov{position:fixed;inset:0;z-index:5000;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:20px}
+.dlg{background:#11162a;border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:20px;max-width:340px;width:100%;font-size:14px;line-height:1.5}
+.dbtn{display:flex;gap:10px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:6000;max-width:90%;background:#1f2540;border:1px solid rgba(255,255,255,.12);padding:12px 16px;border-radius:12px;font-size:13px}
 </style>
 </head>
 <body>
@@ -94,6 +98,9 @@ firebase.initializeApp(firebaseConfig);
 const auth=firebase.auth(), db=firebase.firestore(), FV=firebase.firestore.FieldValue;
 const app=document.getElementById("app");
 const $=id=>document.getElementById(id);
+function ask(msg,okText){return new Promise(res=>{const o=document.createElement("div");o.className="ov";o.innerHTML=`<div class="dlg"><div>${esc(msg)}</div><div class="dbtn"><button class="btnGray" id="dNo">Cancel</button><button class="btnRed" id="dYes">${esc(okText||"Yes")}</button></div></div>`;document.body.appendChild(o);const done=v=>{o.remove();res(v)};o.querySelector("#dNo").onclick=()=>done(false);o.querySelector("#dYes").onclick=()=>done(true)})}
+function toast(m){const t=document.createElement("div");t.className="toast";t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),3500)}
+window.alert=toast;
 
 let user=null,isOwner=false;
 let listUnsub=null,qUnsub=null,setUnsub=null,tick=null;
@@ -187,7 +194,7 @@ async function uploadOwnerQr(){
   }catch(e){alert("Unable to upload QR: "+e.message)}
 }
 async function removeOwnerQr(){
-  if(!isOwner||!confirm("Remove the payment QR?"))return;
+  if(!isOwner||!(await ask("Remove the payment QR?","Remove")))return;
   try{await db.doc("settings/owner").set({qr:FV.delete()},{merge:true})}
   catch(e){alert("Unable to remove QR: "+e.message)}
 }
@@ -252,7 +259,7 @@ async function addQuery(){
   }catch(e){alert("Unable to send query: "+e.message)}
 }
 async function deleteQuery(id){
-  if(!isOwner||!confirm("Are you sure you want to delete this query? This cannot be undone."))return;
+  if(!isOwner||!(await ask("Are you sure you want to delete this query? This cannot be undone.","Delete")))return;
   try{
     await db.doc("queries/"+id).delete();
     if(openId===id)showHome();
@@ -399,7 +406,7 @@ async function sendReply(id){
   }catch(e){alert("Unable to save reply: "+e.message)}
 }
 async function confirmPayment(id){
-  if(!isOwner||!confirm("Confirm this payment?"))return;
+  if(!isOwner||!(await ask("Confirm this payment?","Confirm")))return;
   try{
     await db.doc("queries/"+id).update({status:"done",paymentConfirmedAt:FV.serverTimestamp()});
   }catch(e){alert("Unable to confirm payment: "+e.message)}
